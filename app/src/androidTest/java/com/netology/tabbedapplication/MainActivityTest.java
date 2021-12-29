@@ -1,38 +1,31 @@
 package com.netology.tabbedapplication;
 
 
-import androidx.test.espresso.DataInteraction;
-import androidx.test.espresso.ViewInteraction;
-import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.runner.AndroidJUnit4;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withParent;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
 
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
-import static androidx.test.InstrumentationRegistry.getInstrumentation;
-import static androidx.test.espresso.Espresso.onData;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.Espresso.pressBack;
-import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
-import static androidx.test.espresso.action.ViewActions.*;
-import static androidx.test.espresso.assertion.ViewAssertions.*;
-import static androidx.test.espresso.matcher.ViewMatchers.*;
-
-import com.netology.tabbedapplication.R;
+import androidx.test.espresso.ViewInteraction;
+import androidx.test.filters.LargeTest;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.runner.AndroidJUnit4;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -42,18 +35,25 @@ public class MainActivityTest {
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void mainActivityTest() {
+    public void mainActivityTest2() {
         ViewInteraction linearLayout = onView(
-                allOf(withContentDescription("Tab 1"),
+                allOf(withContentDescription("Tab 2"),
                         withParent(withParent(withId(R.id.tabs))),
                         isDisplayed()));
         linearLayout.check(matches(isDisplayed()));
 
         ViewInteraction linearLayout2 = onView(
-                allOf(withContentDescription("Tab 2"),
+                allOf(withContentDescription("Tab 1"),
                         withParent(withParent(withId(R.id.tabs))),
                         isDisplayed()));
         linearLayout2.check(matches(isDisplayed()));
+
+        ViewInteraction textView = onView(
+                allOf(withId(R.id.section_label), withText("Page: 1"),
+                        withParent(allOf(withId(R.id.constraintLayout),
+                                withParent(withId(R.id.view_pager)))),
+                        isDisplayed()));
+        textView.check(matches(withText("Page: 1")));
 
         ViewInteraction tabView = onView(
                 allOf(withContentDescription("Tab 2"),
@@ -65,12 +65,12 @@ public class MainActivityTest {
                         isDisplayed()));
         tabView.perform(click());
 
-        ViewInteraction textView = onView(
+        ViewInteraction textView2 = onView(
                 allOf(withId(R.id.section_label), withText("Page: 2"),
                         withParent(allOf(withId(R.id.constraintLayout),
                                 withParent(withId(R.id.view_pager)))),
                         isDisplayed()));
-        textView.check(matches(withText("Page: 2")));
+        textView2.check(matches(withText("Page: 2")));
     }
 
     private static Matcher<View> childAtPosition(
